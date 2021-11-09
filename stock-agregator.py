@@ -1,86 +1,63 @@
 #region imports
-# Raw Data
-import numpy as np
-import pandas as pd
-from pandas.core.frame import DataFrame
-
-# Source
-import yfinance as yf
-
-# Visualization
-import plotly.graph_objects as go
-import plotly.express as px
-
-# Google Drive
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
+from input import inputTickers, inputCrypto, inputStandardTickers
+from get_prices import getMarketStatus, getLivePrice, getCryptoPrice
+from print_prices import printLivePrices, printCryptoPrices
 #endregion
 
-# Variables
-gauth = GoogleAuth()           
-drive = GoogleDrive(gauth) 
-ticker_list=['GME', 'UBER', 'MSFT']
-
-def get_data(stock_list):
-#region function
+def cryptoOrStandard(tickers):
     """
-    Downloads the stock data of list, converts it into a format that's more easily read\n
-    Then puts the dataframe along the specficed axis\n
-    Finally makes it so the dataframe only shows 'Open', 'High', 'Low', and 'Ticker', and returns it
+    Main part of the program that asks if the user wants to input more tickers\n
+    If no then it returns the initial ticker list\n
+    If yes, then it asks if the user wants to add a Cryptocurrency ticker or a Standard ticker\n
+    Then it repeats and adds until the user inputs N
     """
-    ticker_list = stock_list
-    df_list = list()
+    t_f = True
+    empty_crypto = []
+    full_crypto_list = []
+    full_list = []
 
-    for ticker in ticker_list:
-        ticker_data = yf.download(
-                ticker,
-                period='1d',
-                interval='5m',
-                group_by='ticker',
-                rounding=True
-        )
-        ticker_data['Ticker'] = ticker
-        df_list.append(ticker_data)
+    while t_f:
+        y_n = input("Do you want to add more tickers? ")
 
-    df = pd.concat(df_list)
-    print(df)
-    df = df[['Open', 'High', 'Low', 'Ticker']]
-    return df
-#endregion
+        if y_n == "Y" or y_n == "y":
+            c_s = input("Do you want to input a Cryptocurrency (C) ticker or a Standard(S) ticker? ")
+            if c_s == "C" or c_s == "c":
+                crypto_list = inputCrypto()
+                for i in crypto_list:
+                    empty_crypto.append(i)
+                full_crypto_list = getCryptoPrice(empty_crypto)
+            
+            elif c_s == "S" or c_s == "s":
+                standard_list = inputStandardTickers()
+                for i in standard_list:
+                    tickers.append(i)
+                full_list = getLivePrice(tickers)
+            
+            else:
+                print("Please put c or s.")
+            
+        elif y_n == "N" or y_n == "n":
+            t_f = False
+            ticker_list = getLivePrice(tickers)
 
-def make_csv(dataframe):
-#region function
-    """
-    Creates and empty csv file.\n 
-    Opens it, erases the previous contents and writes the new dataframe to it
-    """
-    
-    df = dataframe
-    data=pd.DataFrame()
-    data.to_csv('stock_data.csv')
-    sprd = open('stock_data.csv', 'r+')
-    sprd.truncate(0)
-    df.to_csv(sprd)
-
-#endregion
-
-def upload_csv():
-#region function
-    """
-    Takes the csv file made by make_csv() and uploads it to a specific folder on google drive
-    """
-    folder_id = '1UVCdt5k3SkpgTltZ0mogUcj4tpbz8-BN'
-    upload_list = ['stock_data.csv']
-
-    for upload_file in upload_list:
-        gfile = drive.CreateFile({'parents': [{'id': folder_id}]})
-        gfile.SetContentFile(upload_file)
-        gfile.Upload()
-#endregion
+            if full_list and full_crypto_list:
+                printLivePrices(full_list)
+                printCryptoPrices(full_crypto_list)
+            elif full_list:
+                printLivePrices(full_list)
+            elif full_crypto_list:
+                printLivePrices(ticker_list)
+                printCryptoPrices(full_crypto_list)
+            else:
+                printLivePrices(ticker_list)
+        else:
+            print("Please put y or n.")
 
 
-stock_data = get_data(ticker_list)
+def main():
+    getMarketStatus()
+    tickers = inputTickers()
+    cryptoOrStandard(tickers)
 
-make_csv(stock_data)
-
-upload_csv()
+if __name__ == "__main__":
+    main() 

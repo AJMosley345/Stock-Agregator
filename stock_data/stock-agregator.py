@@ -1,7 +1,9 @@
 #region imports
 from input import inputTickers, inputCrypto, inputStandardTickers
-from get_prices import getMarketStatus, getLivePrice, getCryptoPrice
+from get_prices import getMarketStatus, getLivePrice, getCryptoPrice, printMarketStatus
 from print_prices import printLivePrices, printCryptoPrices
+from time import time, sleep
+import keyboard
 #endregion
 
 def cryptoOrStandard(tickers):
@@ -41,23 +43,42 @@ def cryptoOrStandard(tickers):
             ticker_list = getLivePrice(tickers)
 
             if full_list and full_crypto_list:
-                printLivePrices(full_list)
-                printCryptoPrices(full_crypto_list)
+                print(printLivePrices(full_list))
+                print(printCryptoPrices(full_crypto_list))
             elif full_list:
-                printLivePrices(full_list)
+                print(printLivePrices(full_list))
             elif full_crypto_list:
-                printLivePrices(ticker_list)
-                printCryptoPrices(full_crypto_list)
+                print(printLivePrices(ticker_list))
+                print(printCryptoPrices(full_crypto_list))
             else:
-                printLivePrices(ticker_list)
+                print(printLivePrices(ticker_list))
         else:
             print("Please put y or n.")
 
 
+def priceAllDay(tickers):
+    t_f = True
+    # i = 0
+    while t_f:
+        prices = getLivePrice(tickers)
+        print(printLivePrices(prices))
+        sleep(60 - time() % 60)
+
+       # this = input("Stop(s) or Continue (anything else)?")
+       # if this == "c":
+           # while i < 1:
+               # prices = getLivePrice(tickers)
+               # sleep(60 - time() % 60)
+               # i += 1
+        # elif this == "s":
+           # print("Price checking ended")
+            # break
+
+
 def main():
-    getMarketStatus()
+    printMarketStatus()
     tickers = inputTickers()
-    cryptoOrStandard(tickers)
+    priceAllDay(tickers)
 
 if __name__ == "__main__":
     main() 

@@ -1,9 +1,18 @@
+# stock_agregator.py
+
 #region imports
-from input import inputTickers, inputCrypto, inputStandardTickers
-from get_prices import getMarketStatus, getLivePrice, getCryptoPrice, printMarketStatus
-from print_prices import printLivePrices, printCryptoPrices
-from time import time, sleep
-import keyboard
+from stock_data.input import (
+    inputTickers, 
+    inputCrypto, 
+    inputStandardTickers
+)
+from stock_data.get_prices import (
+    getMarketStatus, 
+    getLivePrice, 
+    getCryptoPrice, 
+    printMarketStatus
+)
+from stock_data.print_prices import printLivePrices, printCryptoPrices
 #endregion
 
 def cryptoOrStandard(tickers):
@@ -55,30 +64,7 @@ def cryptoOrStandard(tickers):
         else:
             print("Please put y or n.")
 
-
-def priceAllDay(tickers):
-    t_f = True
-    # i = 0
-    while t_f:
-        prices = getLivePrice(tickers)
-        print(printLivePrices(prices))
-        sleep(60 - time() % 60)
-
-       # this = input("Stop(s) or Continue (anything else)?")
-       # if this == "c":
-           # while i < 1:
-               # prices = getLivePrice(tickers)
-               # sleep(60 - time() % 60)
-               # i += 1
-        # elif this == "s":
-           # print("Price checking ended")
-            # break
-
-
-def main():
+def runProgram():
     printMarketStatus()
     tickers = inputTickers()
-    priceAllDay(tickers)
-
-if __name__ == "__main__":
-    main() 
+    cryptoOrStandard(tickers)

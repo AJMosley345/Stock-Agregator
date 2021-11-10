@@ -129,5 +129,4 @@ dmypy.json
 .pyre/
 
 # Temp file
-temp.py
-gui.py
+z_temp/

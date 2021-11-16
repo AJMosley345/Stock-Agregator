@@ -47,13 +47,13 @@ def printMarketStatus():
     """
     market_status = getMarketStatus()
     if market_status == "POST":
-        slowprint("We are in the Post-Market period.\n", 0.3)
+        slowprint("   We are in the Post-Market period.\n", 0.3)
     elif market_status == "PRE":
-        slowprint("We are in the Pre-Market period.\n", 0.3)
+        slowprint("   We are in the Pre-Market period.\n", 0.3)
     elif market_status == "POSTPOST":
-        slowprint("The Market is closed for today.\n", 0.3)
+        slowprint("   The Market is closed for today.\n", 0.3)
     else:
-        slowprint("The market is Open.\n", 0.3)
+        slowprint("| The market is Open.                                                |", 0.3)
 #endregion
 
 #region get prices

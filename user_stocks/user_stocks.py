@@ -77,7 +77,6 @@ def cryptoOrStandard(tickers):
     return full_list, full_crypto_list
 
 def inputStocks():
-    printMarketStatus()
     tickers = inputTickers()
     full_ticker_list, crypto_list = cryptoOrStandard(tickers)
 

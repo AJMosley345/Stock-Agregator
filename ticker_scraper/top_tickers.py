@@ -31,7 +31,6 @@ def printActiveStocks():
 #endregion
 
 def getTopStocks():
-    printMarketStatus()
     ticker_list = printActiveStocks()
     crypto = printTopCrypto()
     # cs.writeToFile(ticker_list, crypto)

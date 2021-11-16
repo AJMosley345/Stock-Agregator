@@ -1,31 +1,41 @@
 # main.py
 #region imports, objects and global variable
 from slowprint.slowprint import slowprint
-import user_stocks.user_stocks as us
-import ticker_scraper.top_tickers as tp
+from ticker_scraper.top_tickers import getTopStocks
+from user_stocks.user_stocks import inputStocks
+from user_stocks.stock_data import getLivePrice, printLivePrices, printMarketStatus
+import sys
+sys.path.append("/home/aj/Projects/Python-Projects/Python-Bot")
+from get_wsb_stocks import popTickersList
 #endregion
 
 def main():
     welcome = [
-        "------------------------------------------------------------",
-        "Welcome to the Stock Agregator.\n",
-        "There are 2 options: \n", 
-        "Either 1: get the prices of the most active stocks and cryptocurrencies.\n",
-        "Or\n",
+        "-------------------------------------------------------------------",
+        "                  Welcome to the Stock Agregator                   \n",
+        "                       There are 3 options                           \n", 
+        "1: Get the prices of the most active stocks and cryptocurrencies.\n",
         "2: Input your own stocks/crypto and get the current price.\n",
-        "Either one can be saved to a spreadsheet (csv) or text file to be used later.\n",
-        "1 or 2?",
+        "3: Get the prices of the most popular stocks on r/WallStreetBets\n",
+        "1, 2 or 3?",
     ]
+
     for i in welcome:
-        slowprint(i, .3)
-    one_two = input()
+        slowprint(i, .2)
+    one_two = input("\n")
 
     if one_two == "1":
-        tp.getTopStocks()
+        getTopStocks()
     elif one_two == "2":
-        us.inputStocks()
+        inputStocks()
+    elif one_two == "3":
+        printMarketStatus()
+        slowprint("Prices of the most popular stocks in r/WallStreetBets\n", .3)
+        pop_list = popTickersList()
+        price_list = getLivePrice(pop_list)
+        slowprint(printLivePrices(price_list), .3)
     else:
-        print("Please enter 1 or 2. ")
+        print("Please enter 1, 2 or 3. ")
 
     
 
